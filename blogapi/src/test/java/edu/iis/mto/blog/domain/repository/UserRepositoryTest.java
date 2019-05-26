@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import edu.iis.mto.blog.domain.model.AccountStatus;
 import edu.iis.mto.blog.domain.model.User;
 
+import static org.hamcrest.CoreMatchers.is;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserRepositoryTest {
@@ -33,6 +35,7 @@ public class UserRepositoryTest {
         user = new User();
         user.setFirstName("Jan");
         user.setEmail("john@domain.com");
+        user.setLastName("Kowalski");
         user.setAccountStatus(AccountStatus.NEW);
     }
 
@@ -61,4 +64,81 @@ public class UserRepositoryTest {
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
     }
 
+
+    @Test
+    public void shouldFindUsersByFirstName(){
+        repository.save(user);
+
+        String searchString = "jan";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(true));
+    }
+
+    @Test
+    public void shouldFindUsersByPartialFistName(){
+        repository.save(user);
+
+        String searchString = "ja";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(true));
+    }
+
+    @Test
+    public void shouldFindUsersByEmail(){
+        repository.save(user);
+
+        String searchString = "john@domain.com";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(true));
+    }
+
+    @Test
+    public void shouldFindUsersByPartialEmail(){
+        repository.save(user);
+
+        String searchString = "@dom";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(true));
+    }
+
+    @Test
+    public void shouldFindUsersByLastName(){
+        repository.save(user);
+
+        String searchString = "Kowalski";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(true));
+    }
+
+    @Test
+    public void shouldFindUsersByPartialLastName(){
+        repository.save(user);
+
+        String searchString = "lsk";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(true));
+    }
+
+    @Test
+    public void shouldNotFindUsersByInvalidData(){
+        repository.save(user);
+
+        String searchString = "fake";
+
+        List<User> userList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase(searchString,searchString,searchString);
+
+        Assert.assertThat(userList.contains(user), is(false));
+    }
 }
