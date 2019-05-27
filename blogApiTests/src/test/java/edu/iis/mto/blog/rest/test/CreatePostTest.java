@@ -12,7 +12,7 @@ public class CreatePostTest extends FunctionalTests {
     private static final String INVALID_POST_API = "/blog/user/2/post";
 
     @Test
-    public void creatingAPostWithValidDataShouldReturnCreated() {
+    public void creatingPostWithValidDataShouldReturnCreatedTest() {
         JSONObject jsonObj = new JSONObject().put("entry", "Test");
 
         RestAssured.given()
@@ -28,7 +28,7 @@ public class CreatePostTest extends FunctionalTests {
     }
 
     @Test
-    public void creatingAPostForNonConfirmedUserShouldReturnBadRequest() {
+    public void creatingPostForNotConfirmedUserShouldReturnBadRequestTest() {
         JSONObject jsonObj = new JSONObject().put("Test", "Test");
 
         RestAssured.given()
