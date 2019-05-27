@@ -1,11 +1,9 @@
 package edu.iis.mto.blog.rest.test;
 
-import org.apache.http.HttpStatus;
-import org.json.JSONObject;
-import org.junit.Test;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
+import org.junit.Test;
 
 public class LookForUserTest extends FunctionalTests {
 
