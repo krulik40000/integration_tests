@@ -78,7 +78,7 @@ public class BlogManagerTest {
         ArgumentCaptor<LikePost> likePostParam = ArgumentCaptor.forClass(LikePost.class);
         verify(likedPostRepository).save(likePostParam.capture());
         LikePost likePost = likePostParam.getValue();
-        
+
         Assert.assertThat(likePost.getPost(), Matchers.is(blogPost));
         Assert.assertThat(likePost.getUser(), Matchers.is(liker));
     }
