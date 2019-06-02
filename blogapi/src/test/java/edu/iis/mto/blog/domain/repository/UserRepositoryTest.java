@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -32,6 +33,7 @@ public class UserRepositoryTest {
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
+        user.setLastName("Kowalski");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
@@ -64,4 +66,18 @@ public class UserRepositoryTest {
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
     }
 
+    @Test
+    public void finding_user_respectively_by_firstname_by_lastname_by_email(){
+        List<User> users;
+        repository.save(user);
+        List<User> result = new ArrayList<>();
+        result.add(user);
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan","","");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","Kowalski","");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","","john@domain.com");
+        Assert.assertThat(users,Matchers.equalTo(result));
+
+    }
 }
