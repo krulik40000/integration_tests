@@ -101,4 +101,17 @@ public class UserRepositoryTest {
        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Rafał","asdn","Rafal@domain.com");
        Assert.assertThat(users,Matchers.equalTo(result));
    }
+    @Test
+    public void finding_user_when_part_of_one_data_is_given(){
+        List<User> users;
+        repository.save(user);
+        List<User> result = new ArrayList<>();
+        result.add(user);
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("ja"," "," ");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","kowa","");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","","john");
+        Assert.assertThat(users,Matchers.equalTo(result));
+    }
 }
