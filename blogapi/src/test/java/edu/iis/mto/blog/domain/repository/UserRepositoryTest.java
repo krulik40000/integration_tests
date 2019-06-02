@@ -100,4 +100,11 @@ public class UserRepositoryTest {
         assertThat(users.contains(user), is(equalTo(false)));
     }
 
+    @Test public void shouldFindUserWithGivenPartOfLastNameIgnoringCase() {
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("other", "wak", "other");
+
+        assertThat(users.contains(user), is(equalTo(true)));
+    }
+
 }
