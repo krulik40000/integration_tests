@@ -80,4 +80,16 @@ public class UserRepositoryTest {
         Assert.assertThat(users,Matchers.equalTo(result));
 
     }
+
+    @Test
+    public void finding_user_when_all_data_in_capital_letters_or_lowercase_letters(){
+        List<User> users;
+        repository.save(user);
+        List<User> result = new ArrayList<>();
+        result.add(user);
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("JAN","KOWALSKI","JOHN@DOMAIN.COM");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("jan","kowalski","john@domain.com");
+        Assert.assertThat(users,Matchers.equalTo(result));
+    }
 }
