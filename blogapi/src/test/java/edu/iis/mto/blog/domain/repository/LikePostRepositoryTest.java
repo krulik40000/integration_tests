@@ -62,4 +62,11 @@ public class LikePostRepositoryTest {
         Optional<LikePost> result = Optional.ofNullable(null);
         Assert.assertThat(liked , Matchers.equalTo(result));
     }
+    @Test
+    public void when_likePostRepository_is_saved_should_find_liked_posts(){
+        likePostRepository.save(likePost);
+        Optional<LikePost> liked = likePostRepository.findByUserAndPost(user,blogPost);
+        Optional<LikePost> result = Optional.of(likePost);
+        Assert.assertThat(liked , Matchers.equalTo(result));
+    }
 }
