@@ -73,11 +73,11 @@ public class UserRepositoryTest {
         List<User> result = new ArrayList<>();
         result.add(user);
         users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan","","");
-        Assert.assertThat(users,Matchers.equalTo(result));
+        Assert.assertThat(users.get(0),Matchers.equalTo(result.get(0)));
         users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","Kowalski","");
-        Assert.assertThat(users,Matchers.equalTo(result));
+        Assert.assertThat(users.get(0),Matchers.equalTo(result.get(0)));
         users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","","john@domain.com");
-        Assert.assertThat(users,Matchers.equalTo(result));
+        Assert.assertThat(users.get(0),Matchers.equalTo(result.get(0)));
 
     }
 
@@ -92,4 +92,13 @@ public class UserRepositoryTest {
         users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("jan","kowalski","john@domain.com");
         Assert.assertThat(users,Matchers.equalTo(result));
     }
+
+   @Test
+    public void finding_user_witch_doesnt_exist_should_return_no_users(){
+       List<User> users;
+       repository.save(user);
+       List<User> result = new ArrayList<>();
+       users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Rafał","asdn","Rafal@domain.com");
+       Assert.assertThat(users,Matchers.equalTo(result));
+   }
 }
