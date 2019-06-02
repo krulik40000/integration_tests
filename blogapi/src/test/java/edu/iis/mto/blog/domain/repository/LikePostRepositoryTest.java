@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,7 @@ public class LikePostRepositoryTest {
         likePost = new LikePost();
         likePost.setPost(blogPost);
         likePost.setUser(user);
+
     }
 
     @Test
@@ -62,11 +64,27 @@ public class LikePostRepositoryTest {
         Optional<LikePost> result = Optional.ofNullable(null);
         Assert.assertThat(liked , Matchers.equalTo(result));
     }
+
     @Test
     public void when_likePostRepository_is_saved_should_find_liked_posts(){
         likePostRepository.save(likePost);
         Optional<LikePost> liked = likePostRepository.findByUserAndPost(user,blogPost);
         Optional<LikePost> result = Optional.of(likePost);
         Assert.assertThat(liked , Matchers.equalTo(result));
+    }
+
+    @Test
+    public void when_other_post_is_given_should_not_find_liked_posts(){
+        likePostRepository.save(likePost);
+        BlogPost otherBlogPost = new BlogPost();
+        otherBlogPost.setEntry("other test post");
+        otherBlogPost.setUser(user);
+        entityManager.persist(otherBlogPost);
+
+        Optional<LikePost> liked = likePostRepository.findByUserAndPost(user,otherBlogPost);
+        Optional<LikePost> result = Optional.ofNullable(null);
+        Assert.assertThat(liked , Matchers.equalTo(result));
+
+
     }
 }
