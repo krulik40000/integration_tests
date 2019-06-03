@@ -29,17 +29,13 @@ import edu.iis.mto.blog.services.DataFinder;
 @WebMvcTest(BlogApi.class)
 public class BlogApiTest {
 
-    @Autowired
-    private MockMvc mvc;
+    @Autowired private MockMvc mvc;
 
-    @MockBean
-    private BlogService blogService;
+    @MockBean private BlogService blogService;
 
-    @MockBean
-    private DataFinder finder;
+    @MockBean private DataFinder finder;
 
-    @Test
-    public void postBlogUserShouldResponseWithStatusCreatedAndNewUserId() throws Exception {
+    @Test public void postBlogUserShouldResponseWithStatusCreatedAndNewUserId() throws Exception {
         Long newUserId = 1L;
         UserRequest user = new UserRequest();
         user.setEmail("john@domain.com");

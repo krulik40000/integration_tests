@@ -23,8 +23,7 @@ import edu.iis.mto.blog.services.BlogService;
 @Transactional(propagation = Propagation.REQUIRED)
 public class BlogManager extends DomainService implements BlogService {
 
-    protected BlogManager(UserRepository userRepository, BlogPostRepository blogPostRepository, LikePostRepository likePostRepository,
-            BlogDataMapper mapper) {
+    protected BlogManager(UserRepository userRepository, BlogPostRepository blogPostRepository, LikePostRepository likePostRepository, BlogDataMapper mapper) {
         super(userRepository, blogPostRepository, likePostRepository, mapper);
     }
 
@@ -38,8 +37,7 @@ public class BlogManager extends DomainService implements BlogService {
 
     @Override
     public Long createPost(Long userId, PostRequest postRequest) {
-        User user = userRepository.findById(userId)
-                                  .orElseThrow(domainError(DomainError.USER_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(domainError(DomainError.USER_NOT_FOUND));
         if (user.getAccountStatus() != AccountStatus.CONFIRMED) {
             throw new DomainError(DomainError.USER_NOT_CONFIRMED);
         }
@@ -51,17 +49,14 @@ public class BlogManager extends DomainService implements BlogService {
 
     @Override
     public boolean addLikeToPost(Long userId, Long postId) {
-        User user = userRepository.findById(userId)
-                                  .orElseThrow(domainError(DomainError.USER_NOT_FOUND));
-        BlogPost post = blogPostRepository.findById(postId)
-                                          .orElseThrow(domainError(DomainError.POST_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(domainError(DomainError.USER_NOT_FOUND));
+        BlogPost post = blogPostRepository.findById(postId).orElseThrow(domainError(DomainError.POST_NOT_FOUND));
         if (post.getUser()
                 .getId()
                 .equals(userId)) {
             throw new DomainError(DomainError.SELF_LIKE);
         }
-        if (!user.getAccountStatus()
-                .equals(AccountStatus.CONFIRMED)) {
+        if (!user.getAccountStatus().equals(AccountStatus.CONFIRMED)) {
             throw new DomainError(DomainError.USER_NOT_CONFIRMED);
         }
         Optional<LikePost> existingLikeForPost = likePostRepository.findByUserAndPost(user, post);

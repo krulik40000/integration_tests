@@ -32,20 +32,15 @@ import edu.iis.mto.blog.services.BlogService;
 @SpringBootTest
 public class BlogManagerTest {
 
-    @MockBean
-    UserRepository userRepository;
+    @MockBean UserRepository userRepository;
 
-    @MockBean
-    BlogPostRepository blogPostRepository;
+    @MockBean BlogPostRepository blogPostRepository;
 
-    @MockBean
-    LikePostRepository likedPostRepository;
+    @MockBean LikePostRepository likedPostRepository;
 
-    @Autowired
-    BlogDataMapper dataMapper;
+    @Autowired BlogDataMapper dataMapper;
 
-    @Autowired
-    BlogService blogService;
+    @Autowired BlogService blogService;
 
     @Test public void creatingNewUserShouldSetAccountStatusToNEW() {
         blogService.createUser(new UserRequest("John", "Steward", "john@domain.com"));

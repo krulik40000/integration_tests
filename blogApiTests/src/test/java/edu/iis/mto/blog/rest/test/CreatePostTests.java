@@ -42,7 +42,7 @@ public class CreatePostTests extends FunctionalTests {
                 .post(POST_API_START + userId + POST_API_END);
     }
 
-    @Test public void blogPostByCRemovedUserReturns403Code() {
+    @Test public void blogPostByRemovedUserReturns403Code() {
         String userId = "3";
         JSONObject jsonObj = new JSONObject().put("entry", "blog post");
         RestAssured.given()
