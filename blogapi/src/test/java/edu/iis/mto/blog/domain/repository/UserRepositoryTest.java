@@ -32,7 +32,7 @@ public class UserRepositoryTest {
     @Before public void setUp() {
         user = new User();
         user.setFirstName("Jan");
-        user.setLastName("Nowak");
+        user.setLastName("Kowalski");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
@@ -67,7 +67,7 @@ public class UserRepositoryTest {
 
     @Test public void shouldFindUserWithGivenFullLastNameIgnoringCase() {
         repository.save(user);
-        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("other", "nowak", "other");
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("other", "kowalski", "other");
 
         assertThat(users.contains(user), is(equalTo(true)));
     }
@@ -102,7 +102,7 @@ public class UserRepositoryTest {
 
     @Test public void shouldFindUserWithGivenPartOfLastNameIgnoringCase() {
         repository.save(user);
-        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("other", "wak", "other");
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("other", "lski", "other");
 
         assertThat(users.contains(user), is(equalTo(true)));
     }
