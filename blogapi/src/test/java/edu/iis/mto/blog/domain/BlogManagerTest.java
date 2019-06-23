@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
@@ -86,6 +87,29 @@ public class BlogManagerTest {
         Assert.assertThat(likePost.getPost(), Matchers.is(post));
         Assert.assertThat(likePost.getUser(), Matchers.is(testuser2));
 
-
     }
+
+    @Test(expected = DomainError.class)
+    public void not_confirmed_user_should_not_be_able_to_like_post(){
+
+        User testuser1 = new User();
+        testuser1.setEmail("test@test.test");
+        testuser1.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testuser1));
+
+        User testuser2 = new User();
+        testuser2.setEmail("test2@test2.test2");
+        testuser2.setId(2L);
+        testuser2.setAccountStatus(AccountStatus.NEW);
+        when(userRepository.findById(2L)).thenReturn(Optional.of(testuser2));
+
+        BlogPost post = new BlogPost();
+        post.setId(1L);
+        post.setUser(testuser1);
+        when(blogPostRepository.findById(1L)).thenReturn(Optional.of(post));
+
+        when(likedPostRepository.findByUserAndPost(testuser2, post)).thenReturn(Optional.empty());
+        blogService.addLikeToPost(testuser2.getId(), post.getId());
+    }
+
 }
