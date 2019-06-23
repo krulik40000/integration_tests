@@ -8,7 +8,13 @@ import org.junit.Test;
 
 import java.net.URI;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+
 public class LikePostTest {
+
+    private static final String DOUBLE_LIKED_POST ="/blog/user/1/post";
+    private static final String OTHER_USER_LIKE_POST="/blog/user/3/like/1";
+
 
     private static final String LIKE_OTHER_USER_POST ="/blog/user/1/like/2" ;
     private static final String NEW_USER_LIKE_POST ="/blog/user/2/like/1";
@@ -62,4 +68,39 @@ public class LikePostTest {
                    .post(NEW_USER_LIKE_POST);
     }
 
+    @Test
+    public void liking_same_post_twice_should_not_change_post_status() {
+        JSONObject jsonObj = new JSONObject();
+
+        RestAssured.given()
+                   .accept(ContentType.JSON)
+                   .header("Content-Type", "application/json;charset=UTF-8")
+                   .body(jsonObj.toString())
+                   .expect()
+                   .log()
+                   .all()
+                   .statusCode(HttpStatus.SC_OK)
+                   .when()
+                   .post(OTHER_USER_LIKE_POST);
+
+        RestAssured.given()
+                   .accept(ContentType.JSON)
+                   .header("Content-Type", "application/json;charset=UTF-8")
+                   .body(jsonObj.toString())
+                   .expect()
+                   .log()
+                   .all()
+                   .statusCode(HttpStatus.SC_OK)
+                   .when()
+                   .post(OTHER_USER_LIKE_POST);
+
+        RestAssured.given()
+                   .accept(ContentType.JSON)
+                   .header("Content-Type", "application/json;charset=UTF-8")
+                   .when()
+                   .get(DOUBLE_LIKED_POST)
+                   .then()
+                   .body("likesCount", hasItem(1));
+    }
 }
+
