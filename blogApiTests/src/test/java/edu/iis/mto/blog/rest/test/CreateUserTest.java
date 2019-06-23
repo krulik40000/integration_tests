@@ -39,4 +39,6 @@ public class CreateUserTest extends FunctionalTests {
                    .when()
                    .post(USER_API);
     }
+
+
 }
