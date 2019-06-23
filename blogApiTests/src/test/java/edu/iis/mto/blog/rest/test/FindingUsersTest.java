@@ -32,4 +32,23 @@ public class FindingUsersTest {
                    .get(FINDING_USER + searchString);
     }
 
+    @Test
+    public void finding_removed_user_should_return_empty_list_of_users(){
+        JSONObject jsonObj = new JSONObject();
+
+        String searchString = "4";
+
+        RestAssured.given()
+                   .accept(ContentType.JSON)
+                   .header("Content-Type", "application/json;charset=UTF-8")
+                   .body(jsonObj.toString())
+                   .expect()
+                   .log()
+                   .all()
+                   .statusCode(HttpStatus.SC_OK)
+                   .and()
+                   .body("size()", is(0))
+                   .when()
+                   .get(FINDING_USER + searchString);
+    }
 }
