@@ -6,7 +6,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.net.URI;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 
