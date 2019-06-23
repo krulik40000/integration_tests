@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItem;
 
 public class FindingPostsTest {
 
@@ -43,6 +44,24 @@ public class FindingPostsTest {
                    .statusCode(HttpStatus.SC_NOT_FOUND)
                    .when()
                    .get(FINDING_REMOVED_USER_POST);
+
+    }
+    @Test
+    public void finding_post_should_return_valid_number_of_likes(){
+        JSONObject jsonObj = new JSONObject();
+
+        RestAssured.given()
+                   .accept(ContentType.JSON)
+                   .header("Content-Type", "application/json;charset=UTF-8")
+                   .body(jsonObj.toString())
+                   .expect()
+                   .log()
+                   .all()
+                   .statusCode(HttpStatus.SC_OK)
+                   .and()
+                   .body("likesCount", hasItem(0))
+                   .when()
+                   .get(EXISTING_POST);
 
     }
 }
