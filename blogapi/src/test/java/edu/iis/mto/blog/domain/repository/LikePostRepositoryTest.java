@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +76,15 @@ public class LikePostRepositoryTest {
         List<LikePost> likePosts = likePostRepository.findAll();
 
         Assert.assertThat(likePosts, Matchers.hasSize(1));
+    }
+
+    @Test
+    public void shouldFindOneLikePostForUser(){
+        Optional<LikePost> optional = likePostRepository.findByUserAndPost(user, blogPost);
+        List<LikePost> likePosts = optional.map(Collections::singletonList).orElseGet(Collections::emptyList);
+
+        Assert.assertThat(likePosts, Matchers.hasSize(1));
+        Assert.assertThat(likePosts.get(0), Matchers.is(equals(likePost)));
     }
 
 }
