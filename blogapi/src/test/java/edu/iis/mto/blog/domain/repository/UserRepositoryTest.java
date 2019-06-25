@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -32,11 +33,12 @@ public class UserRepositoryTest {
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
+        user.setLastName("Kowalski");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
 
-    @Ignore
+
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
@@ -45,7 +47,7 @@ public class UserRepositoryTest {
         Assert.assertThat(users, Matchers.hasSize(0));
     }
 
-    @Ignore
+
     @Test
     public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
         User persistedUser = entityManager.persist(user);
@@ -55,7 +57,7 @@ public class UserRepositoryTest {
         Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
     }
 
-    @Ignore
+
     @Test
     public void shouldStoreANewUser() {
 
@@ -64,4 +66,52 @@ public class UserRepositoryTest {
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
     }
 
+    @Test
+    public void finding_user_respectively_by_firstname_by_lastname_by_email(){
+        List<User> users;
+        repository.save(user);
+        List<User> result = new ArrayList<>();
+        result.add(user);
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan","","");
+        Assert.assertThat(users.get(0),Matchers.equalTo(result.get(0)));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","Kowalski","");
+        Assert.assertThat(users.get(0),Matchers.equalTo(result.get(0)));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","","john@domain.com");
+        Assert.assertThat(users.get(0),Matchers.equalTo(result.get(0)));
+
+    }
+
+    @Test
+    public void finding_user_when_all_data_in_capital_letters_or_lowercase_letters(){
+        List<User> users;
+        repository.save(user);
+        List<User> result = new ArrayList<>();
+        result.add(user);
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("JAN","KOWALSKI","JOHN@DOMAIN.COM");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("jan","kowalski","john@domain.com");
+        Assert.assertThat(users,Matchers.equalTo(result));
+    }
+
+   @Test
+    public void finding_user_witch_doesnt_exist_should_return_no_users(){
+       List<User> users;
+       repository.save(user);
+       List<User> result = new ArrayList<>();
+       users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Rafał","asdn","Rafal@domain.com");
+       Assert.assertThat(users,Matchers.equalTo(result));
+   }
+    @Test
+    public void finding_user_when_part_of_one_data_is_given(){
+        List<User> users;
+        repository.save(user);
+        List<User> result = new ArrayList<>();
+        result.add(user);
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("ja"," "," ");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","kowa","");
+        Assert.assertThat(users,Matchers.equalTo(result));
+        users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","","john");
+        Assert.assertThat(users,Matchers.equalTo(result));
+    }
 }
