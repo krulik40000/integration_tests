@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
@@ -77,5 +78,45 @@ public class BlogManagerTest {
         Assert.assertThat(likePost.getPost(), Matchers.is(blogPost));
         Assert.assertThat(likePost.getUser(), Matchers.is(secoundUser));
     }
+
+    @Test(expected = DomainError.class)
+    public void addLikeFromAccountWithStatusNew_shouldThrowException(){
+        User owner = new User();
+        owner.setId(1L);
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(owner));
+
+        User secoundUser = new User();
+        secoundUser.setId(2L);
+        secoundUser.setAccountStatus(AccountStatus.NEW);
+        Mockito.when(userRepository.findById(2L)).thenReturn(Optional.of(secoundUser));
+
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(1L);
+        blogPost.setUser(owner);
+        Mockito.when(blogPostRepository.findById(1L)).thenReturn(Optional.of(blogPost));
+
+        blogService.addLikeToPost(secoundUser.getId(), blogPost.getId());
+    }
+
+    @Test(expected = DomainError.class)
+    public void addLikeFromAccountWithStatusRemoved_shouldThrowException(){
+        User owner = new User();
+        owner.setId(1L);
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(owner));
+
+        User secoundUser = new User();
+        secoundUser.setId(2L);
+        secoundUser.setAccountStatus(AccountStatus.REMOVED);
+        Mockito.when(userRepository.findById(2L)).thenReturn(Optional.of(secoundUser));
+
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(1L);
+        blogPost.setUser(owner);
+        Mockito.when(blogPostRepository.findById(1L)).thenReturn(Optional.of(blogPost));
+
+        blogService.addLikeToPost(secoundUser.getId(), blogPost.getId());
+    }
+
+
 
 }
