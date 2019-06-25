@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
@@ -42,9 +43,12 @@ public class LikePostRepositoryTest {
         user.setLastName("Kowalski");
         user.setEmail("jk@gmail.com");
         user.setAccountStatus(AccountStatus.NEW);
+        repository.save(user);
 
         blogPost = new BlogPost();
         blogPost.setUser(user);
+        blogPost.setEntry("test");
+        entityManager.persist(blogPost);
 
         likePost = new LikePost();
         likePost.setUser(user);
@@ -56,6 +60,13 @@ public class LikePostRepositoryTest {
         List<LikePost> likePosts = likePostRepository.findAll();
 
         Assert.assertThat(likePosts, Matchers.hasSize(0));
+    }
+
+    @Test
+    public void shouldFIndNoLikesForUser(){
+        Optional<LikePost> likePosts = likePostRepository.findByUserAndPost(user, blogPost);
+
+        Assert.assertThat(likePosts, Matchers.is(Optional.empty()));
     }
 
 }
