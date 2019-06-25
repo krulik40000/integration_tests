@@ -1,9 +1,11 @@
 package edu.iis.mto.blog.api;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -63,8 +65,14 @@ public class BlogApiTest {
         String content = writeJson(userRequest);
 
         mvc.perform(post("/blog/user").contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isConflict())
-                .andExpect(status().isConflict());
+                .accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void shouldResponse404Code_whenUserNotFound() throws Exception {
+        Mockito.when(finder.getUserData(1L)).thenThrow(new DomainError(DomainError.USER_NOT_FOUND));
+
+        mvc.perform(get("/blog/user/{id}", 1)).andExpect(status().isNotFound());
     }
 
 }
