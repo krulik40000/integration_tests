@@ -80,11 +80,26 @@ public class LikePostRepositoryTest {
 
     @Test
     public void shouldFindOneLikePostForUser(){
+        likePostRepository.save(likePost);
         Optional<LikePost> optional = likePostRepository.findByUserAndPost(user, blogPost);
         List<LikePost> likePosts = optional.map(Collections::singletonList).orElseGet(Collections::emptyList);
 
         Assert.assertThat(likePosts, Matchers.hasSize(1));
-        Assert.assertThat(likePosts.get(0), Matchers.is(equals(likePost)));
+        Assert.assertThat(likePosts.get(0), Matchers.equalTo(likePost));
+    }
+
+    @Test
+    public void changeDataInDatabase(){
+        likePostRepository.save(likePost);
+        List<LikePost> likePosts = likePostRepository.findAll();
+
+        likePosts.get(0).getPost().setEntry("NEW");
+
+        likePostRepository.save(likePosts.get(0));
+
+        likePosts = likePostRepository.findAll();
+
+        Assert.assertThat(likePosts.get(0).getPost().getEntry(), Matchers.equalTo("NEW"));
     }
 
 }
