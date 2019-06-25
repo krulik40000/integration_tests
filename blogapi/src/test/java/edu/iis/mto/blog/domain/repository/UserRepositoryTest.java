@@ -81,4 +81,33 @@ public class UserRepositoryTest {
         Assert.assertThat(usersList.contains(user), Matchers.is(equals(true)));
     }
 
+    @Test
+    public void shouldFindUserByEmail(){
+
+        List<User> usersList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","", "john@domain.com");
+
+        Assert.assertThat(usersList.contains(user), Matchers.is(equals(true)));
+    }
+
+    @Test
+    public void shouldNotFindUserByWrongFirstName(){
+        List<User> usersList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Ja","","");
+
+        Assert.assertThat(usersList.contains(user), Matchers.is(equals(false)));
+    }
+
+    @Test
+    public void shouldNotFindUserByWrongLastName(){
+        List<User> usersList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","Kowal","");
+
+        Assert.assertThat(usersList.contains(user), Matchers.is(equals(false)));
+    }
+
+    @Test
+    public void shouldNotFindUserByWrongEmail(){
+        List<User> usersList = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("","","wrongTest@gmail.com");
+
+        Assert.assertThat(usersList.contains(user), Matchers.is(equals(false)));
+    }
+
 }
