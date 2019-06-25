@@ -69,4 +69,12 @@ public class LikePostRepositoryTest {
         Assert.assertThat(likePosts, Matchers.is(Optional.empty()));
     }
 
+    @Test
+    public void shouldFindOneLikePost(){
+        likePostRepository.save(likePost);
+        List<LikePost> likePosts = likePostRepository.findAll();
+
+        Assert.assertThat(likePosts, Matchers.hasSize(1));
+    }
+
 }
