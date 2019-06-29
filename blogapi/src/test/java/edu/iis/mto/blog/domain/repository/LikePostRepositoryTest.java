@@ -35,7 +35,7 @@ public class LikePostRepositoryTest {
     @Before
     public void setup() {
         user = new User();
-        user.setLastName("Bond");
+        user.setLastName("Frank");
         user.setFirstName("Jan");
         user.setEmail("janbond@mail.com");
         user.setAccountStatus(AccountStatus.CONFIRMED);
