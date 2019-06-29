@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import edu.iis.mto.blog.domain.model.BlogPost;
 import edu.iis.mto.blog.domain.model.LikePost;
 import edu.iis.mto.blog.domain.repository.BlogPostRepository;
@@ -80,5 +81,29 @@ public class BlogManagerTest {
         verify(likePostRepository).save(likePostArgumentCaptor.capture());
         LikePost like = likePostArgumentCaptor.getValue();
         Assert.assertThat(like.getUser(), is(user));
+    }
+
+    @Test(expected = DomainError.class)
+    public void userWithIncorrectStatusShouldNotBeAbleToLikePost() {
+        User user = new User();
+        user.setAccountStatus(AccountStatus.NEW);
+        user.setFirstName("john");
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        User postOwner = new User();
+        postOwner.setAccountStatus(AccountStatus.CONFIRMED);
+        postOwner.setFirstName("Peter");
+        postOwner.setId(2L);
+        when(userRepository.findById(2L)).thenReturn(Optional.of(postOwner));
+
+        BlogPost post = new BlogPost();
+        post.setUser(postOwner);
+        post.setEntry("about cats again!");
+        post.setId(1L);
+        when(blogPostRepository.findById(1L)).thenReturn(Optional.of(post));
+
+        blogService.addLikeToPost(user.getId(), post.getId());
+
     }
 }
