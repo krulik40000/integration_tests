@@ -1,15 +1,18 @@
 package edu.iis.mto.blog.api;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edu.iis.mto.blog.domain.errors.DomainError;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,6 +55,24 @@ public class BlogApiTest {
 
     private String writeJson(Object obj) throws JsonProcessingException {
         return new ObjectMapper().writer().writeValueAsString(obj);
+    }
+
+    @Test
+    public void shouldResponse409Code_whenThrowDataIntegrityViolationException() throws Exception {
+        UserRequest userRequest = new UserRequest();
+
+        Mockito.when(blogService.createUser(userRequest)).thenThrow(new DataIntegrityViolationException("data exception"));
+        String content = writeJson(userRequest);
+
+        mvc.perform(post("/blog/user").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8).content(content)).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void shouldResponse404Code_whenUserNotFound() throws Exception {
+        Mockito.when(finder.getUserData(1L)).thenThrow(new DomainError(DomainError.USER_NOT_FOUND));
+
+        mvc.perform(get("/blog/user/{id}", 1)).andExpect(status().isNotFound());
     }
 
 }

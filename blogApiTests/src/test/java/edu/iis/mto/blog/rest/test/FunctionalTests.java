@@ -1,8 +1,13 @@
 package edu.iis.mto.blog.rest.test;
 
+import io.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.junit.BeforeClass;
 
 import io.restassured.RestAssured;
+import org.junit.Test;
 
 public class FunctionalTests {
 
@@ -27,5 +32,4 @@ public class FunctionalTests {
         }
         RestAssured.baseURI = baseHost;
     }
-
 }
