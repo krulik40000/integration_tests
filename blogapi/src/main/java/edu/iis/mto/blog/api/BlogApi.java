@@ -88,7 +88,7 @@ public class BlogApi {
     }
 
     @ApiOperation(value = "get single post based on post id")
-    @GetMapping(path = "/post")
+    @GetMapping(path = "/post/{id}")
     public PostData getPosts(@PathVariable("id") Long postId) {
         LOGGER.debug("get post by id '{}'", postId);
         return finder.getPost(postId);
