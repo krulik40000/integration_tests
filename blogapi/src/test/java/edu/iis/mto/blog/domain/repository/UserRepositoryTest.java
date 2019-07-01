@@ -1,5 +1,7 @@
 package edu.iis.mto.blog.domain.repository;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -32,11 +34,11 @@ public class UserRepositoryTest {
     public void setUp() {
         user = new User();
         user.setFirstName("Jan");
+        user.setLastName("Tester");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
     }
 
-    
     @Test
     public void shouldFindNoUsersIfRepositoryIsEmpty() {
 
@@ -45,23 +47,39 @@ public class UserRepositoryTest {
         Assert.assertThat(users, Matchers.hasSize(0));
     }
 
-    
     @Test
     public void shouldFindOneUsersIfRepositoryContainsOneUserEntity() {
         User persistedUser = entityManager.persist(user);
         List<User> users = repository.findAll();
 
         Assert.assertThat(users, Matchers.hasSize(1));
-        Assert.assertThat(users.get(0).getEmail(), Matchers.equalTo(persistedUser.getEmail()));
+        Assert.assertThat(users.get(0)
+                               .getEmail(),
+                Matchers.equalTo(persistedUser.getEmail()));
     }
 
-    
     @Test
     public void shouldStoreANewUser() {
 
         User persistedUser = repository.save(user);
 
         Assert.assertThat(persistedUser.getId(), Matchers.notNullValue());
+    }
+
+    @Test
+    public void shoudFindOneUserIfThatUserExists(){
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Jan", "Tester", "john@domain.com");
+       
+        Assert.assertThat(users.contains(user),is(true));
+    }
+    
+    @Test
+    public void shoudNotFindOneUserIfThatUserNotExists(){
+        repository.save(user);
+        List<User> users = repository.findByFirstNameContainingOrLastNameContainingOrEmailContainingAllIgnoreCase("Kamil", "Duch", "kamo@domain.com");
+       
+        Assert.assertThat(users.contains(user),is(false));
     }
 
 }
