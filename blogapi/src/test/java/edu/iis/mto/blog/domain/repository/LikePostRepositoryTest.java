@@ -1,7 +1,7 @@
 package edu.iis.mto.blog.domain.repository;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -27,17 +27,17 @@ public class LikePostRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private LikePostRepository likePostRepository;
-    
+
     private User user;
     private LikePost likePost;
     private BlogPost blogPost;
-    
+
     @Before
     public void setUp() {
         user = new User();
@@ -46,29 +46,37 @@ public class LikePostRepositoryTest {
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
         userRepository.save(user);
-        
+
         blogPost = new BlogPost();
         blogPost.setEntry("test");
         blogPost.setUser(user);
-        
+
         entityManager.persist(blogPost);
-        
+
         likePost = new LikePost();
         likePost.setPost(blogPost);
         likePost.setUser(user);
     }
-    
+
     @Test
     public void shouldFindNoLikesIfRepositoryEmpty() {
         List<LikePost> likePosts = likePostRepository.findAll();
-        assertThat(likePosts,hasSize(0));
+        assertThat(likePosts, hasSize(0));
     }
-    
+
     @Test
     public void shouldFindOneLikeIfIsInRepository() {
         likePostRepository.save(likePost);
         List<LikePost> likePosts = likePostRepository.findAll();
-        assertThat(likePosts,hasSize(1));
-        assertThat(likePosts.contains(likePost),is(true));
+        assertThat(likePosts, hasSize(1));
+        assertThat(likePosts.contains(likePost), is(true));
     }
+
+    @Test
+    public void shouldFindNoLikesIfRepositoryIsEmpty_UsedFindUserAndPost() {
+
+        Optional<LikePost> likePosts = likePostRepository.findByUserAndPost(user, blogPost);
+        assertThat(likePosts, is(Optional.empty()));
+    }
+
 }
