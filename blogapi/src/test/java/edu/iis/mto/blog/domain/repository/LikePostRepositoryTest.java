@@ -1,5 +1,6 @@
 package edu.iis.mto.blog.domain.repository;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -79,4 +80,20 @@ public class LikePostRepositoryTest {
         assertThat(likePosts, is(Optional.empty()));
     }
 
+    @Test
+    public void shouldUpdateLikedPost() {
+        likePostRepository.save(likePost);
+        List<LikePost> likePosts = likePostRepository.findAll();
+
+        LikePost post = likePosts.get(0);
+        post.getPost()
+                .setEntry("updated");
+        likePostRepository.save(post);
+        likePosts = likePostRepository.findAll();
+        assertThat(likePosts.get(0)
+                            .getPost()
+                            .getEntry(),
+                equalTo("updated"));
+
+    }
 }
