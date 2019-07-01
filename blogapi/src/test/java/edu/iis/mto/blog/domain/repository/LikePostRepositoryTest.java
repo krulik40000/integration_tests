@@ -45,6 +45,7 @@ public class LikePostRepositoryTest {
         user.setLastName("Tester");
         user.setEmail("john@domain.com");
         user.setAccountStatus(AccountStatus.NEW);
+        userRepository.save(user);
         
         blogPost = new BlogPost();
         blogPost.setEntry("test");
@@ -61,5 +62,13 @@ public class LikePostRepositoryTest {
     public void shouldFindNoLikesIfRepositoryEmpty() {
         List<LikePost> likePosts = likePostRepository.findAll();
         assertThat(likePosts,hasSize(0));
+    }
+    
+    @Test
+    public void shouldFindOneLikeIfIsInRepository() {
+        likePostRepository.save(likePost);
+        List<LikePost> likePosts = likePostRepository.findAll();
+        assertThat(likePosts,hasSize(1));
+        assertThat(likePosts.contains(likePost),is(true));
     }
 }
