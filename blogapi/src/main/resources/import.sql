@@ -4,4 +4,4 @@ insert into user (account_status, email, first_name) values ('NEW', 'brian@domai
 insert into user (account_status, email, first_name, last_name) values ('NEW','tester@domain.com', 'Tohn', 'Tester') 
 insert into user (account_status, email, first_name, last_name) values ('REMOVED', 'removed@domain.com', 'Rohn', 'Removed') 
 insert into user (account_status, email, first_name, last_name) values ('CONFIRMED', 'sohn@domain.com', 'Bohn', 'jteward')
-insert into blog_post ( values (null, 'test post', 1)
+insert into blog_post values (null, 'post', 1)
