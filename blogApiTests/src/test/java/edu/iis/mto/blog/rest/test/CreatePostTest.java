@@ -9,7 +9,6 @@ import io.restassured.http.ContentType;
 
 public class CreatePostTest extends FunctionalTests {
 
-    private static final String USER_API = "/blog/user/1/post";
 
     @Test
     public void blogPostByConfirmedUserReturnsCode201() {
@@ -23,7 +22,37 @@ public class CreatePostTest extends FunctionalTests {
                    .all()
                    .statusCode(HttpStatus.SC_CREATED)
                    .when()
-                   .post(USER_API);
+                   .post("/blog/user/1/post");
+    }
+    
+    @Test
+    public void blogPostByNewUserReturnsCode403() {
+        JSONObject jsonObject = new JSONObject().put("entry", "stub blog post");
+        RestAssured.given()
+                .accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8")
+                .body(jsonObject.toString())
+                .expect()
+                .log()
+                .all()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .when()
+                .post("/blog/user/2/post");
+    }
+    
+    @Test
+    public void blogPostByRemovedUserReturnsCode403() {
+        JSONObject jsonObject = new JSONObject().put("entry", "stub blog post");
+        RestAssured.given()
+                .accept(ContentType.JSON)
+                .header("Content-Type", "application/json;charset=UTF-8")
+                .body(jsonObject.toString())
+                .expect()
+                .log()
+                .all()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .when()
+                .post("/blog/user/4/post");
     }
 
     
